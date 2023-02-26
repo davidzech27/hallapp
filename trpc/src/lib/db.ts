@@ -38,7 +38,7 @@ export const db = {
 	},
 	batch: async <TRow>(
 		queries: Parameters<typeof client.batch>[0],
-		options: scylla.QueryOptions
+		options?: scylla.QueryOptions
 	) => {
 		return humps.camelizeKeys((await client.batch(queries, options)).rows) as TRow[]
 	},

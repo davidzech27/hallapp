@@ -1,11 +1,25 @@
 import jwt from "jsonwebtoken"
 import env from "../../../env"
 
-interface AccessTokenPayload {
-	email: string
-	schoolId: number
-	role: "administrator" | "teacher" | "student"
-}
+type AccessTokenPayload =
+	| {
+			email: string
+			schoolId: number
+			role: "administrator"
+	  }
+	| {
+			email: string
+			name: string
+			schoolId: number
+			role: "teacher"
+	  }
+	| {
+			email: string
+			name: string
+			schoolId: number
+			teacherEmail: string
+			role: "student"
+	  }
 
 export const encodeAccessToken = (payload: AccessTokenPayload) =>
 	jwt.sign(payload, env.ACCESS_TOKEN_SECRET)

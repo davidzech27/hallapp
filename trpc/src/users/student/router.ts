@@ -1,8 +1,10 @@
 import { router } from "../../initTRPC"
-import studentLandingRouter from "./landing"
+import landingRouter from "./landing"
+import passRouter from "./pass"
 
 const studentRouter = router({
-	landing: studentLandingRouter,
+	landing: landingRouter,
+	pass: passRouter,
 })
 
 export default studentRouter

@@ -1,8 +1,8 @@
 import { router } from "../../initTRPC"
-import administratorLandingRouter from "./landing"
+import landingRouter from "./landing"
 
 const administratorRouter = router({
-	landing: administratorLandingRouter,
+	landing: landingRouter,
 })
 
 export default administratorRouter

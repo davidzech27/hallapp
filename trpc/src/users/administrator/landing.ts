@@ -11,7 +11,7 @@ import {
 	encodeSchoolCreationToken,
 } from "../shared/auth/jwt"
 
-const administratorLandingRouter = router({
+const landingRouter = router({
 	verifyEmail: publicProcedure
 		.input(
 			z.object({
@@ -100,4 +100,4 @@ const administratorLandingRouter = router({
 		}),
 })
 
-export default administratorLandingRouter
+export default landingRouter

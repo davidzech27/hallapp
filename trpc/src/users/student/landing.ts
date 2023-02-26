@@ -10,7 +10,7 @@ import {
 	encodeAccountCreationToken,
 } from "../shared/auth/jwt"
 
-const studentLandingRouter = router({
+const landingRouter = router({
 	verifyEmail: publicProcedure
 		.input(
 			z.object({
@@ -84,9 +84,15 @@ const studentLandingRouter = router({
 			)
 
 			return {
-				accessToken: encodeAccessToken({ email, schoolId, role: "student" }),
+				accessToken: encodeAccessToken({
+					email,
+					name,
+					schoolId,
+					teacherEmail,
+					role: "student",
+				}),
 			}
 		}),
 })
 
-export default studentLandingRouter
+export default landingRouter

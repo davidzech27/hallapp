@@ -130,37 +130,20 @@ CREATE TABLE hall.student (
 
 CREATE TABLE hall.pass (
     school_id int,
-    id timeuuid,
+    scheduled_for timestamp,
+    id uuid,
+    deny_reason text,
     leaving_email text,
     leaving_name text,
+    reason text,
+    requested_at timestamp,
     status text,
     student_email text,
     student_name text,
     visiting_email text,
     visiting_name text,
-    PRIMARY KEY (school_id, id)
-) WITH CLUSTERING ORDER BY (id DESC)
-    AND bloom_filter_fp_chance = 0.01
-    AND caching = {'keys': 'ALL', 'rows_per_partition': 'ALL'}
-    AND comment = ''
-    AND compaction = {'class': 'SizeTieredCompactionStrategy'}
-    AND compression = {'sstable_compression': 'org.apache.cassandra.io.compress.LZ4Compressor'}
-    AND crc_check_chance = 1.0
-    AND dclocal_read_repair_chance = 0.0
-    AND default_time_to_live = 0
-    AND gc_grace_seconds = 864000
-    AND max_index_interval = 2048
-    AND memtable_flush_period_in_ms = 0
-    AND min_index_interval = 128
-    AND read_repair_chance = 0.0
-    AND speculative_retry = '99.0PERCENTILE';
-
-CREATE MATERIALIZED VIEW hall.pass_by_visiting_email AS
-    SELECT *
-    FROM hall.pass
-    WHERE visiting_email IS NOT null AND id IS NOT null
-    PRIMARY KEY ((school_id, visiting_email), id)
-    WITH CLUSTERING ORDER BY (id DESC)
+    PRIMARY KEY (school_id, scheduled_for, id)
+) WITH CLUSTERING ORDER BY (scheduled_for DESC, id ASC)
     AND bloom_filter_fp_chance = 0.01
     AND caching = {'keys': 'ALL', 'rows_per_partition': 'ALL'}
     AND comment = ''
@@ -179,9 +162,30 @@ CREATE MATERIALIZED VIEW hall.pass_by_visiting_email AS
 CREATE MATERIALIZED VIEW hall.pass_by_leaving_email AS
     SELECT *
     FROM hall.pass
-    WHERE leaving_email IS NOT null AND id IS NOT null
-    PRIMARY KEY ((school_id, leaving_email), id)
-    WITH CLUSTERING ORDER BY (id DESC)
+    WHERE leaving_email IS NOT null AND id IS NOT null AND scheduled_for IS NOT null
+    PRIMARY KEY ((school_id, leaving_email), scheduled_for, id)
+    WITH CLUSTERING ORDER BY (scheduled_for DESC, id ASC)
+    AND bloom_filter_fp_chance = 0.01
+    AND caching = {'keys': 'ALL', 'rows_per_partition': 'ALL'}
+    AND comment = ''
+    AND compaction = {'class': 'SizeTieredCompactionStrategy'}
+    AND compression = {'sstable_compression': 'org.apache.cassandra.io.compress.LZ4Compressor'}
+    AND crc_check_chance = 1.0
+    AND dclocal_read_repair_chance = 0.0
+    AND default_time_to_live = 0
+    AND gc_grace_seconds = 864000
+    AND max_index_interval = 2048
+    AND memtable_flush_period_in_ms = 0
+    AND min_index_interval = 128
+    AND read_repair_chance = 0.0
+    AND speculative_retry = '99.0PERCENTILE';
+
+CREATE MATERIALIZED VIEW hall.pass_by_visiting_email AS
+    SELECT *
+    FROM hall.pass
+    WHERE visiting_email IS NOT null AND id IS NOT null AND scheduled_for IS NOT null
+    PRIMARY KEY ((school_id, visiting_email), scheduled_for, id)
+    WITH CLUSTERING ORDER BY (scheduled_for DESC, id ASC)
     AND bloom_filter_fp_chance = 0.01
     AND caching = {'keys': 'ALL', 'rows_per_partition': 'ALL'}
     AND comment = ''
@@ -200,9 +204,9 @@ CREATE MATERIALIZED VIEW hall.pass_by_leaving_email AS
 CREATE MATERIALIZED VIEW hall.pass_by_student_email AS
     SELECT *
     FROM hall.pass
-    WHERE student_email IS NOT null AND id IS NOT null
-    PRIMARY KEY ((school_id, student_email), id)
-    WITH CLUSTERING ORDER BY (id DESC)
+    WHERE student_email IS NOT null AND id IS NOT null AND scheduled_for IS NOT null
+    PRIMARY KEY ((school_id, student_email), scheduled_for, id)
+    WITH CLUSTERING ORDER BY (scheduled_for DESC, id ASC)
     AND bloom_filter_fp_chance = 0.01
     AND caching = {'keys': 'ALL', 'rows_per_partition': 'ALL'}
     AND comment = ''

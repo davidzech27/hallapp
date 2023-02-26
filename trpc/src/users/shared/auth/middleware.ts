@@ -13,16 +13,20 @@ export const isStudent = t.middleware(async ({ ctx: { headers }, next }) => {
 	}
 
 	try {
-		const { email, schoolId, role } = decodeAccessToken({ accessToken })
+		const accessTokenPayload = decodeAccessToken({ accessToken })
 
-		if (role !== "student") {
+		if (accessTokenPayload.role !== "student") {
 			throw new TRPCError({ code: "FORBIDDEN" })
 		}
+
+		const { email, name, schoolId, teacherEmail } = accessTokenPayload
 
 		return next({
 			ctx: {
 				email,
+				name,
 				schoolId,
+				teacherEmail,
 			},
 		})
 	} catch {
@@ -40,15 +44,18 @@ export const isTeacher = t.middleware(async ({ ctx: { headers }, next }) => {
 	}
 
 	try {
-		const { email, schoolId, role } = decodeAccessToken({ accessToken })
+		const accessTokenPayload = decodeAccessToken({ accessToken })
 
-		if (role !== "teacher") {
+		if (accessTokenPayload.role !== "teacher") {
 			throw new TRPCError({ code: "FORBIDDEN" })
 		}
+
+		const { email, name, schoolId } = accessTokenPayload
 
 		return next({
 			ctx: {
 				email,
+				name,
 				schoolId,
 			},
 		})
