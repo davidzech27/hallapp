@@ -55,6 +55,8 @@ const uploadProfilePhotoHandler: FastifyPluginCallback = (instance, _options, do
 				return reply.status(400).send()
 			}
 		} catch (err) {
+			instance.log.error(err)
+
 			return reply.status(500).send()
 		}
 	})

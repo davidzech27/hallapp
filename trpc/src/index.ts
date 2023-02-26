@@ -5,6 +5,7 @@ import { createContext } from "./context"
 import server from "./server"
 import env from "./env"
 import uploadProfilePhotoHandler from "./users/shared/upload"
+import getBotResponseHandler from "./users/shared/bot"
 
 server.register(fastifyTRPCPlugin, {
 	trpcOptions: {
@@ -23,6 +24,8 @@ server.register(fastifyTRPCPlugin, {
 })
 
 server.register(uploadProfilePhotoHandler)
+
+server.register(getBotResponseHandler)
 
 server.get("/panel", (_request, reply) => {
 	reply.type("text/html").send(

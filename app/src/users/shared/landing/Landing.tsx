@@ -127,6 +127,7 @@ completeLanding()
         }} />,
 		studentTeacher: () => <StudentTeacherScreen accountCreationToken={accountCreationToken!}  schoolId={schoolId!} goToNextScreen={(teacherEmail) => {
 			setTeacherEmail(teacherEmail)
+			useAuthStore.setState({teacherEmail})
 			setRouteId("name")
 		}} />,
 		name: () => <NameScreen accountCreationToken={accountCreationToken!} role={role as "teacher" | "student"} schoolId={schoolId!} teacherEmail={teacherEmail} goToNextScreen={({accessToken, name}) => {

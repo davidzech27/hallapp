@@ -6,6 +6,9 @@ import UserSwitch from "./users/shared/auth/UserSwitch"
 import useAuthStore from "./users/shared/auth/useAuthStore"
 import Landing from "./users/shared/landing/Landing"
 import { LogBox } from 'react-native';
+import Student from "./users/student/Student"
+import Teacher from "./users/teacher/Teacher"
+import Administrator from "./users/administrator/Administrator"
 
 
 LogBox.ignoreAllLogs() //! remove after demo!!!!!
@@ -23,9 +26,9 @@ const App = () => {
 		<TRPCProvider>
 			<SafeAreaProvider>
 				<UserSwitch
-					Student={() => null}
-					Teacher={() => null}
-					Administrator={() => null}
+					Student={Student}
+					Teacher={Teacher}
+					Administrator={Administrator}
 					Unauthed={Landing}
 				/>
 			</SafeAreaProvider>

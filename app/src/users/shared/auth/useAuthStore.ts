@@ -16,24 +16,28 @@ const useAuthStore = create(
 			role: undefined,
 			isLandingComplete: undefined,
 			authLoaded: false,
+			teacherEmail: undefined
 		} as
 			| {
 					accessToken: string
 					role: Role
 					isLandingComplete: true
 					authLoaded: true
+					teacherEmail?: string
 			  }
 			| {
 					accessToken: string | null
 					role: Role | null
 					isLandingComplete: false
 					authLoaded: true
+					teacherEmail: undefined
 			  }
 			| {
 					accessToken: undefined
 					role: undefined
 					isLandingComplete: undefined
 					authLoaded: false
+					teacherEmail: undefined
 			  },
 		(set) => ({
 			setAccessToken: async (accessToken: string) => {

@@ -1,9 +1,11 @@
+import { types } from "cassandra-driver"
+
 export type PassStatusType = "pending" | "denied" | "approved" | "left" | "arrived"
 
 export type PassType =
 	| {
 			scheduledFor: Date
-			id: string
+			id: types.Uuid
 			status: "pending"
 			studentEmail: string
 			studentName: string
@@ -19,7 +21,7 @@ export type PassType =
 	  }
 	| {
 			scheduledFor: Date
-			id: string
+			id: types.Uuid
 			status: "denied" | "approved"
 			studentEmail: string
 			studentName: string
@@ -35,7 +37,7 @@ export type PassType =
 	  }
 	| {
 			scheduledFor: Date
-			id: string
+			id: types.Uuid
 			status: "left"
 			studentEmail: string
 			studentName: string
@@ -51,7 +53,7 @@ export type PassType =
 	  }
 	| {
 			scheduledFor: Date
-			id: string
+			id: types.Uuid
 			status: "arrived"
 			studentEmail: string
 			studentName: string

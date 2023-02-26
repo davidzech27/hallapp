@@ -7,7 +7,7 @@ import type { PassType, PassStatusType } from "../shared/passType"
 
 const passRouter = router({
 	passTimeline: studentProcedure.query(async ({ ctx: { email, schoolId } }) => {
-		return await db.execute<
+		const a = await db.execute<
 			Omit<
 				PassType,
 				| "studentEmail"
@@ -22,6 +22,8 @@ const passRouter = router({
 			"SELECT scheduled_for, id, status, visiting_email, visiting_name, reason, teacher_comment FROM pass_by_student_email WHERE student_email = ? AND school_id = ?",
 			[email, schoolId]
 		)
+		console.log({ a: a.length })
+		return a
 	}),
 	requestPass: studentProcedure
 		.input(
@@ -66,6 +68,12 @@ const passRouter = router({
 				)
 			}
 		),
+	getTeachersAtSchool: studentProcedure.query(async ({ ctx: { schoolId } }) => {
+		return await db.execute<{ email: string; name: string }>(
+			"SELECT email, name FROM teacher WHERE school_id = ?",
+			[schoolId]
+		)
+	}),
 })
 
 export default passRouter

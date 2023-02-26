@@ -1,19 +1,20 @@
-import { type FC } from "react"
+import { ReactNode, type FC } from "react"
 import { Pressable } from "react-native"
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated"
 import clsx from "clsx"
 
 interface ButtonProps {
-	text: string
+	text?: string
 	color: "white" | "primary"
 	onPress?: () => void
 	disabled?: boolean
 	outline?: boolean
+	children?: ReactNode
 }
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
-const Button: FC<ButtonProps> = ({ color, text, disabled, onPress, outline }) => {
+const Button: FC<ButtonProps> = ({ color, text, disabled, onPress, outline, children }) => {
 	const pressed = useSharedValue(false)
 
 	const buttonStyle = useAnimatedStyle(() => {
@@ -64,22 +65,23 @@ const Button: FC<ButtonProps> = ({ color, text, disabled, onPress, outline }) =>
 					  }[color]
 			)}
 		>
-			<Animated.Text
-				style={textStyle}
-				className={clsx(
-					"text-center text-2xl font-bold",
-					!outline
-						? color === "white"
+				{children ? <Animated.View style={textStyle}>{children}</Animated.View> : <Animated.Text
+					style={textStyle}
+					className={clsx(
+						"text-center text-2xl font-bold",
+						!outline
+							? color === "white"
 							? "text-primary"
 							: "text-white"
-						: {
-								white: "text-white",
-								primary: "text-primary",
-						  }[color]
-				)}
-			>
+							: {
+									white: "text-white",
+									primary: "text-primary",
+							}[color]
+					)}
+				>
 				{text}
-			</Animated.Text>
+			</Animated.Text>}
+
 		</AnimatedPressable>
 	)
 }

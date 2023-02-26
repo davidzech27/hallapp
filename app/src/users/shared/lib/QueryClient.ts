@@ -4,6 +4,7 @@ export default new QueryClient({
 	defaultOptions: {
 		queries: {
 			retry: false,
+			refetchInterval: 5000,
 		},
 		mutations: {
 			retry: false,

@@ -1,62 +1,21 @@
 import getHeaders from "../auth/getHeaders"
 import { TRPC_URL } from "env"
 
-const getBotResponse = async ({
-	previousConversation,
-	onData,
-}: {
-	previousConversation: string
-	onData: (data: string) => void
-}) => {
+const getBotResponse = async ({ previousConversation }: { previousConversation: string }) => {
 	try {
-		await fetch(`${TRPC_URL}/getBotResponse`, {
-			body: previousConversation,
+		const response = await fetch(`${TRPC_URL}/getBotResponse`, {
+			body: JSON.stringify({
+				previousConversation,
+			}),
 			method: "POST",
+			headers: {
+				...getHeaders(),
+				"Content-Type": "application/json",
+				Accept: "application/json",
+			},
 		})
-			.then((response) => {
-				if (!response.body) {
-					throw new Error("No response.body")
-				}
-				const reader = response.body.getReader()
 
-				return new ReadableStream({
-					start(controller) {
-						function push() {
-							reader.read().then(({ done, value }) => {
-								if (done) {
-									controller.close()
-									return
-								}
-
-								controller.enqueue(value)
-								push()
-							})
-						}
-
-						push()
-					},
-				})
-			})
-			.then((stream) => {
-				const decoder = new TextDecoder()
-				const reader = stream.getReader()
-
-				function read() {
-					reader.read().then(({ done, value }) => {
-						if (done) {
-							return
-						}
-
-						const data = decoder.decode(value)
-
-						onData(data)
-
-						read()
-					})
-				}
-
-				read()
-			})
+		return (await response.json()).conversation as string
 	} catch (err) {
 		console.error(err)
 	}
