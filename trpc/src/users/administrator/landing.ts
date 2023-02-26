@@ -48,12 +48,17 @@ const landingRouter = router({
 						schoolCity: schoolInfo.city,
 						schoolState: schoolInfo.state,
 					}),
-				}
+				} as
+					| { schoolAlreadyCreated: false; schoolCreationToken: string }
+					| { schoolAlreadyCreated: true; accessToken: string; email: string }
 			} else if (existingRegisteredSchool.administratorEmail === email) {
 				return {
 					schoolAlreadyCreated: true,
 					accessToken: encodeAccessToken({ email, schoolId, role: "administrator" }),
-				}
+					email,
+				} as
+					| { schoolAlreadyCreated: false; schoolCreationToken: string }
+					| { schoolAlreadyCreated: true; accessToken: string; email: string }
 			} else {
 				throw new TRPCError({
 					code: "CONFLICT",
@@ -87,6 +92,14 @@ const landingRouter = router({
 						schoolState,
 					]
 				)
+
+				return {
+					accessToken: encodeAccessToken({
+						email,
+						schoolId,
+						role: "administrator",
+					}),
+				}
 			}
 		),
 	searchSchoolByPrefix: publicProcedure

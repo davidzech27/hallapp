@@ -45,6 +45,7 @@ const landingRouter = router({
 			return {
 				accountCreationToken: encodeAccountCreationToken({ email, role: "student" }),
 				potentialSchools,
+				email,
 			}
 		}),
 	getTeachersAtSchool: publicProcedure

@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken"
 import env from "../../../env"
 
-type AccessTokenPayload =
+export type AccessTokenPayload =
 	| {
 			email: string
 			schoolId: number

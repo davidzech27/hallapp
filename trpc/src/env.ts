@@ -14,6 +14,7 @@ const schema = z.object({
 	AWS_SECRET_ACCESS_KEY: z.string(),
 	PROFILE_PHOTO_BUCKET_NAME: z.string(),
 	PROFILE_PHOTO_BUCKET_REGION: z.string(),
+	OPENAI_KEY: z.string(),
 	PORT: z.string().transform(Number),
 	DEV: z.string().transform(Boolean),
 })

@@ -13,6 +13,7 @@ const schoolSchema = z.object({
 	name: z.string(),
 	city: z.string(),
 	state: z.string(),
+	id: z.number(),
 })
 
 export const schoolSearchClient = {
@@ -23,9 +24,10 @@ export const schoolSearchClient = {
 		schoolId: number
 		onParseError: (error: string) => void
 	}) => {
-		const parsedResult = schoolSchema.safeParse(
-			await redis.hgetall(keys.school({ id: schoolId }))
-		)
+		const parsedResult = schoolSchema.safeParse({
+			id: schoolId,
+			...(await redis.hgetall(keys.school({ id: schoolId }))),
+		})
 
 		if (parsedResult.success) {
 			return parsedResult.data
@@ -51,6 +53,8 @@ export const schoolSearchClient = {
 		)[1] // most of the time will be on the order of 20 returned items, so no point in scaling down count
 			.slice(0, 20)
 
+		if (names.length === 0) return []
+
 		const ids = (await redis.sunion(names.map((name) => keys.schoolIds({ name }))))
 			.map((id, nameIndex) =>
 				id !== null
@@ -63,7 +67,11 @@ export const schoolSearchClient = {
 
 		return (
 			await Promise.all(
-				ids.map((id) => (typeof id === "number" ? redis.hgetall(keys.school({ id })) : id))
+				ids.map((id) =>
+					typeof id === "number"
+						? redis.hgetall(keys.school({ id })).then((school) => ({ id, ...school }))
+						: id
+				)
 			)
 		)
 			.map((result) => {

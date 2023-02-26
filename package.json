@@ -6,6 +6,7 @@
 		"dev": "yarn --cwd app dev & yarn --cwd trpc dev"
 	},
 	"workspaces": [
-		"trpc"
+		"trpc",
+		"app"
 	]
 }

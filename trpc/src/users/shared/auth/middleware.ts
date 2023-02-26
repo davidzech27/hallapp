@@ -90,3 +90,28 @@ export const isAdministrator = t.middleware(async ({ ctx: { headers }, next }) =
 		throw new TRPCError({ code: "UNAUTHORIZED" })
 	}
 })
+
+export const isAuthed = t.middleware(async ({ ctx: { headers }, next }) => {
+	let accessToken: string | undefined
+
+	accessToken = getAccessTokenFromHeaders({ headers })
+
+	if (!accessToken) {
+		throw new TRPCError({ code: "UNAUTHORIZED" })
+	}
+
+	try {
+		const accessTokenPayload = decodeAccessToken({ accessToken })
+
+		const { email, schoolId } = accessTokenPayload
+
+		return next({
+			ctx: {
+				email,
+				schoolId,
+			},
+		})
+	} catch {
+		throw new TRPCError({ code: "UNAUTHORIZED" })
+	}
+})
