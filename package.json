@@ -1,0 +1,11 @@
+{
+	"name": "hall",
+	"version": "1.0.0",
+	"private": true,
+	"scripts": {
+		"dev": "yarn --cwd app dev & yarn --cwd trpc dev"
+	},
+	"workspaces": [
+		"trpc"
+	]
+}
